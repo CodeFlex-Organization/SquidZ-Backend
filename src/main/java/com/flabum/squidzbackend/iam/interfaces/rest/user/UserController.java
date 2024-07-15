@@ -1,0 +1,40 @@
+package com.flabum.squidzbackend.iam.interfaces.rest.user;
+
+import com.flabum.squidzbackend.iam.domain.model.commands.SignUpCommand;
+import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
+import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.SignUpResource;
+import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.UserResource;
+import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.SignUpCommandFromResourceAssembler;
+import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.UserResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@AllArgsConstructor
+@RestController
+@RequestMapping(value = "api/v1/users", produces = MediaType.APPLICATION_JSON_VALUE)
+@Tag(name="Users", description = "Users Management Endpoints")
+public class UserController {
+
+    private final UserCommandService userCommandService;
+
+    @PostMapping("sign-up")
+    public ResponseEntity<UserResource> signUp(@RequestBody SignUpResource signUpResource) {
+        var Assembler = new SignUpCommandFromResourceAssembler();
+        var signUpCommand = Assembler.toCommandFromResource(signUpResource);
+        var user = userCommandService.execute(signUpCommand);
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var userResource = UserResourceFromEntityAssembler.toResourceFromEntity(user.get());
+        return new ResponseEntity<>(userResource, HttpStatus.CREATED);
+    }
+
+
+}
