@@ -33,7 +33,7 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            String token = tokenService.getBearerTokenFrom(request);
+            String token = getJwtFromCookie(request);
             if (token != null && tokenService.validateToken(token)) {
                 String username = tokenService.getUsernameFromToken(token);
                 var userDetails = userDetailsService.loadUserByUsername(username);
@@ -46,6 +46,18 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
             LOGGER.error("Cannot set user authentication: {}", e.getMessage());
         }
         filterChain.doFilter(request, response);
+    }
+
+    private String getJwtFromCookie(HttpServletRequest request) {
+        var cookies = request.getCookies();
+        if (cookies != null) {
+            for (var cookie : cookies) {
+                if ("JWT".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 
 }
