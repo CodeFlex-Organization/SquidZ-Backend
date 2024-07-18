@@ -1,12 +1,15 @@
 package com.flabum.squidzbackend.iam.application.internal.commandservices;
 
 import com.flabum.squidzbackend.iam.domain.model.aggregates.User;
+import com.flabum.squidzbackend.iam.domain.model.commands.SignInCommand;
 import com.flabum.squidzbackend.iam.domain.model.commands.SignUpCommand;
 import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
 import com.flabum.squidzbackend.iam.infrastructure.hashing.bcrypt.BCryptHashingService;
 import com.flabum.squidzbackend.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.flabum.squidzbackend.iam.infrastructure.persistence.jpa.repositories.UserRepository;
+import com.flabum.squidzbackend.iam.infrastructure.token.jwts.TokenService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -18,6 +21,8 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final RoleRepository roleRepository;
 
     private final BCryptHashingService bcryptHashingService;
+
+    private final TokenService tokenService;
 
     @Override
     public Optional<User> execute(SignUpCommand command) {
@@ -33,6 +38,18 @@ public class UserCommandServiceImpl implements UserCommandService {
         return Optional.of(user);
     }
 
+    @Override
+    public Optional<ImmutablePair<User, String>> execute(SignInCommand command) {
+        var user = userRepository.findByEmail(command.email());
+        if (user.isEmpty()){
+            throw new RuntimeException("User not found");
+        }
+        if (!bcryptHashingService.matches(command.password(), user.get().getPassword())){
+            throw new RuntimeException("Invalid password");
+        }
+        var token = tokenService.generateToken(user.get().getEmail().address());
+        return Optional.of(ImmutablePair.of(user.get(), token));
+    }
 
 
 }

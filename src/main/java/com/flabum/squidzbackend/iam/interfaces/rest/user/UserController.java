@@ -1,9 +1,11 @@
 package com.flabum.squidzbackend.iam.interfaces.rest.user;
 
-import com.flabum.squidzbackend.iam.domain.model.commands.SignUpCommand;
 import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
+import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.AuthenticateUserResource;
+import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.SignInResource;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.SignUpResource;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.UserResource;
+import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.SignInCommandFromResourceAssembler;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.SignUpCommandFromResourceAssembler;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.UserResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,6 +37,18 @@ public class UserController {
         var userResource = UserResourceFromEntityAssembler.toResourceFromEntity(user.get());
         return new ResponseEntity<>(userResource, HttpStatus.CREATED);
     }
+
+    @PostMapping("sign-in")
+    public ResponseEntity<AuthenticateUserResource> signIn(@RequestBody SignInResource signInResource ) {
+        var signInCommand = SignInCommandFromResourceAssembler.toCommandFromResource(signInResource);
+        var user = userCommandService.execute(signInCommand);
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var authenticatedUserResource = UserResourceFromEntityAssembler.toResourceFromEntityAndToken(user.get().left, user.get().right);
+        return ResponseEntity.ok(authenticatedUserResource);
+    }
+
 
 
 }
