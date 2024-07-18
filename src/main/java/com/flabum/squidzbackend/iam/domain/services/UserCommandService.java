@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface UserCommandService {
     Optional<User> execute(SignUpCommand command);
+
     Optional<ImmutablePair<User, String>> execute(SignInCommand command);
 }
