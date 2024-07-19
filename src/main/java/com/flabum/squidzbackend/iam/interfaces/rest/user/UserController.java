@@ -1,15 +1,14 @@
 package com.flabum.squidzbackend.iam.interfaces.rest.user;
 
 import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
-import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.AuthenticateUserResource;
-import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.SignInResource;
-import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.SignUpResource;
-import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.UserResource;
+import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.*;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.SignInCommandFromResourceAssembler;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.SignUpCommandFromResourceAssembler;
+import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.UpdatePasswordCommandFromResourceAssembler;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.UserResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,8 +29,7 @@ public class UserController {
 
     @PostMapping("sign-up")
     public ResponseEntity<UserResource> signUp(@RequestBody SignUpResource signUpResource) {
-        var Assembler = new SignUpCommandFromResourceAssembler();
-        var signUpCommand = Assembler.toCommandFromResource(signUpResource);
+        var signUpCommand = SignUpCommandFromResourceAssembler.toCommandFromResource(signUpResource);
         var user = userCommandService.execute(signUpCommand);
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -61,4 +59,18 @@ public class UserController {
 
         return ResponseEntity.ok(authenticatedUserResource);
     }
+
+    @PostMapping("update-password")
+    public ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordResource updatePasswordResource, HttpServletRequest request) {
+        var updatePasswordCommand = UpdatePasswordCommandFromResourceAssembler.toCommandFromResource(updatePasswordResource);
+        var isUpdatedPassword = userCommandService.execute(updatePasswordCommand, request);
+
+        if (!isUpdatedPassword) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password update failed");
+        }
+
+        return ResponseEntity.ok("Password updated successfully");
+    }
+
+
 }

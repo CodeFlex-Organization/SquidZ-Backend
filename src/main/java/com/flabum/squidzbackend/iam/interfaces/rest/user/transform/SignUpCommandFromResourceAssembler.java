@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class SignUpCommandFromResourceAssembler {
 
-    public SignUpCommand toCommandFromResource(SignUpResource resource){
+    public static SignUpCommand toCommandFromResource(SignUpResource resource){
         var roles = resource.roles() != null ? resource.roles().stream().map(
                 name -> Role.toRoleFromName(name)).toList(): new ArrayList<Role>();
 

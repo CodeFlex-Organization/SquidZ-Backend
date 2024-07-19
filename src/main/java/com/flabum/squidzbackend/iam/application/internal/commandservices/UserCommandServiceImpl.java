@@ -3,11 +3,15 @@ package com.flabum.squidzbackend.iam.application.internal.commandservices;
 import com.flabum.squidzbackend.iam.domain.model.aggregates.User;
 import com.flabum.squidzbackend.iam.domain.model.commands.SignInCommand;
 import com.flabum.squidzbackend.iam.domain.model.commands.SignUpCommand;
+import com.flabum.squidzbackend.iam.domain.model.commands.UpdatePasswordCommand;
+import com.flabum.squidzbackend.iam.domain.model.valueobjects.EmailAddress;
 import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
 import com.flabum.squidzbackend.iam.infrastructure.hashing.bcrypt.BCryptHashingService;
 import com.flabum.squidzbackend.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.flabum.squidzbackend.iam.infrastructure.persistence.jpa.repositories.UserRepository;
 import com.flabum.squidzbackend.iam.infrastructure.token.jwts.TokenService;
+import com.flabum.squidzbackend.iam.infrastructure.token.jwts.services.TokenServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
@@ -49,6 +53,21 @@ public class UserCommandServiceImpl implements UserCommandService {
         }
         var token = tokenService.generateToken(user.get().getEmail().address());
         return Optional.of(ImmutablePair.of(user.get(), token));
+    }
+
+    @Override
+    public boolean execute(UpdatePasswordCommand command, HttpServletRequest request) {
+        var email = tokenService.getUsernameFromToken(TokenServiceImpl.getJwtFromCookie(request));
+        var user = userRepository.findByEmail(new EmailAddress(email));
+        if (user.isEmpty()){
+            throw new RuntimeException("User not found");
+        }
+        if (!bcryptHashingService.matches(command.currentPassword(), user.get().getPassword())){
+            throw new RuntimeException("Invalid password");
+        }
+        user.get().setPassword(bcryptHashingService.encode(command.newPassword()));
+        userRepository.save(user.get());
+        return true;
     }
 
 

@@ -118,4 +118,16 @@ public class TokenServiceImpl implements BearerTokenService {
     private boolean isTokenPresentIn(String authorizationParameter) {
         return StringUtils.hasText(authorizationParameter);
     }
+
+    public static String getJwtFromCookie(HttpServletRequest request) {
+        var cookies = request.getCookies();
+        if (cookies != null) {
+            for (var cookie : cookies) {
+                if ("JWT".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
 }
