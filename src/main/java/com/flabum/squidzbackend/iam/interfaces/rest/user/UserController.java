@@ -44,9 +44,11 @@ public class UserController {
     public ResponseEntity<AuthenticateUserResource> signIn(@RequestBody SignInResource signInResource, HttpServletResponse response) {
         var signInCommand = SignInCommandFromResourceAssembler.toCommandFromResource(signInResource);
         var user = userCommandService.execute(signInCommand);
+
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
         var token = user.get().right;
         var authenticatedUserResource = UserResourceFromEntityAssembler.toResourceFromEntityAndToken(user.get().left, user.get().right);
 
@@ -54,14 +56,9 @@ public class UserController {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60);
+        cookie.setMaxAge(7 * 24 * 60 * 60);
         response.addCookie(cookie);
 
-
         return ResponseEntity.ok(authenticatedUserResource);
-
     }
-
-
-
 }
