@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -33,9 +34,15 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        var token = "";
         try {
-            String token = TokenServiceImpl.getJwtFromCookie(request);
-            if (token != null && tokenService.validateToken(token)) {
+            var userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+            if (userAgent != null && !userAgent.contains("Android") && !userAgent.contains("iPhone") && !userAgent.contains("iPad")) {
+                 token = TokenServiceImpl.getJwtFromCookie(request);
+            }
+            else {token = tokenService.getBearerTokenFrom(request);}
+
+            if (token != null && token != "" && tokenService.validateToken(token)) {
                 String username = tokenService.getUsernameFromToken(token);
                 var userDetails = userDetailsService.loadUserByUsername(username);
                 SecurityContextHolder.getContext().setAuthentication(UsernamePasswordAuthenticationTokenBuilder.build(userDetails,request));

@@ -4,11 +4,14 @@ import com.flabum.squidzbackend.iam.infrastructure.token.jwts.BearerTokenService
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,6 +31,10 @@ public class TokenServiceImpl implements BearerTokenService {
     private static final String BEARER_TOKEN_PREFIX = "Bearer";
 
     private static final int TOKEN_BEGIN_INDEX = 7;
+
+    private static final String PREFS_NAME = "MyEncryptedPrefs";
+
+    private static final String KEY_JWT = "jwt_token";
 
     @Value("${authorization.jwt.secret}")
     private String secret;
@@ -130,4 +137,14 @@ public class TokenServiceImpl implements BearerTokenService {
         }
         return null;
     }
+
+    public static void saveJwtInCookie(HttpServletRequest request, HttpServletResponse response, String token){
+        Cookie cookie = new Cookie("JWT", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(7 * 24 * 60 * 60); // 7 días
+        response.addCookie(cookie);
+    }
+
 }

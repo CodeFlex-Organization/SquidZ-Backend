@@ -1,6 +1,7 @@
 package com.flabum.squidzbackend.iam.interfaces.rest.user;
 
 import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
+import com.flabum.squidzbackend.iam.infrastructure.token.jwts.services.TokenServiceImpl;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.*;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.SignInCommandFromResourceAssembler;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.SignUpCommandFromResourceAssembler;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("sign-in")
-    public ResponseEntity<AuthenticateUserResource> signIn(@RequestBody SignInResource signInResource, HttpServletResponse response) {
+    public ResponseEntity<AuthenticateUserResource> signIn(@RequestBody SignInResource signInResource, HttpServletResponse response, HttpServletRequest request) {
         var signInCommand = SignInCommandFromResourceAssembler.toCommandFromResource(signInResource);
         var user = userCommandService.execute(signInCommand);
 
@@ -50,12 +52,10 @@ public class UserController {
         var token = user.get().right;
         var authenticatedUserResource = UserResourceFromEntityAssembler.toResourceFromEntityAndToken(user.get().left, user.get().right);
 
-        Cookie cookie = new Cookie("JWT", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(7 * 24 * 60 * 60);
-        response.addCookie(cookie);
+        var userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+        if (userAgent != null && !userAgent.contains("Android") && !userAgent.contains("iPhone") && !userAgent.contains("iPad")) {
+            TokenServiceImpl.saveJwtInCookie(request, response, token);
+        }
 
         return ResponseEntity.ok(authenticatedUserResource);
     }
