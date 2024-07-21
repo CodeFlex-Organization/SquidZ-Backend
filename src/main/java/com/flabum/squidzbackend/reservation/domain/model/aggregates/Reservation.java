@@ -53,5 +53,4 @@ public class Reservation {
 //        this.time = time;
 //        this.barberService = barberService;
 //    }
-
 }
