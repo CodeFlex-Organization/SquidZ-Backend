@@ -4,6 +4,7 @@ import com.flabum.squidzbackend.iam.domain.model.aggregates.User;
 import com.flabum.squidzbackend.iam.domain.model.commands.SignInCommand;
 import com.flabum.squidzbackend.iam.domain.model.commands.SignUpCommand;
 import com.flabum.squidzbackend.iam.domain.model.commands.UpdatePasswordCommand;
+import com.flabum.squidzbackend.iam.domain.model.commands.UpdateUserDataCommand;
 import com.flabum.squidzbackend.iam.domain.model.valueobjects.EmailAddress;
 import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
 import com.flabum.squidzbackend.iam.infrastructure.hashing.bcrypt.BCryptHashingService;
@@ -66,6 +67,19 @@ public class UserCommandServiceImpl implements UserCommandService {
             throw new RuntimeException("Invalid password");
         }
         user.get().setPassword(bcryptHashingService.encode(command.newPassword()));
+        userRepository.save(user.get());
+        return true;
+    }
+
+    @Override
+    public boolean execute(UpdateUserDataCommand command, HttpServletRequest request) {
+        var email = tokenService.getUsernameFromToken(TokenServiceImpl.getJwtFromCookie(request));
+        var user = userRepository.findByEmail(new EmailAddress(email));
+        if (user.isEmpty()){
+            throw new RuntimeException("User not found");
+        }
+        user.get().setName(command.name());
+        user.get().setPhoneNumber(command.phoneNumber());
         userRepository.save(user.get());
         return true;
     }

@@ -3,10 +3,7 @@ package com.flabum.squidzbackend.iam.interfaces.rest.user;
 import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
 import com.flabum.squidzbackend.iam.infrastructure.token.jwts.services.TokenServiceImpl;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.*;
-import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.SignInCommandFromResourceAssembler;
-import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.SignUpCommandFromResourceAssembler;
-import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.UpdatePasswordCommandFromResourceAssembler;
-import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.UserResourceFromEntityAssembler;
+import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,19 +38,15 @@ public class UserController {
     public ResponseEntity<AuthenticateUserResource> signIn(@RequestBody SignInResource signInResource, HttpServletResponse response, HttpServletRequest request) {
         var signInCommand = SignInCommandFromResourceAssembler.toCommandFromResource(signInResource);
         var user = userCommandService.execute(signInCommand);
-
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
         var token = user.get().right;
         var authenticatedUserResource = UserResourceFromEntityAssembler.toResourceFromEntityAndToken(user.get().left, user.get().right);
-
         var userAgent = request.getHeader(HttpHeaders.USER_AGENT);
         if (userAgent != null && !userAgent.contains("Android") && !userAgent.contains("iPhone") && !userAgent.contains("iPad")) {
             TokenServiceImpl.saveJwtInCookie(request, response, token);
         }
-
         return ResponseEntity.ok(authenticatedUserResource);
     }
 
@@ -61,13 +54,19 @@ public class UserController {
     public ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordResource updatePasswordResource, HttpServletRequest request) {
         var updatePasswordCommand = UpdatePasswordCommandFromResourceAssembler.toCommandFromResource(updatePasswordResource);
         var isUpdatedPassword = userCommandService.execute(updatePasswordCommand, request);
-
         if (!isUpdatedPassword) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password update failed");
         }
-
         return ResponseEntity.ok("Password updated successfully");
     }
 
-
+    @PutMapping("update-user-data")
+    public ResponseEntity<String> updateUserData(@RequestBody UpdateUserDataResource updateUserDataResource, HttpServletRequest request) {
+        var updateUserDataCommand = UpdateUserDataCommandFromResourceAssembler.toCommandFromResource(updateUserDataResource);
+        var isUpdatedUserData = userCommandService.execute(updateUserDataCommand, request);
+        if (!isUpdatedUserData) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User update failed");
+        }
+        return ResponseEntity.ok("User updated successfully");
+    }
 }
