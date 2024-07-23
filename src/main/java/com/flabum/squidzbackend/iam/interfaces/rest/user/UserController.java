@@ -16,10 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
@@ -60,7 +57,7 @@ public class UserController {
         return ResponseEntity.ok(authenticatedUserResource);
     }
 
-    @PostMapping("update-password")
+    @PutMapping("update-password")
     public ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordResource updatePasswordResource, HttpServletRequest request) {
         var updatePasswordCommand = UpdatePasswordCommandFromResourceAssembler.toCommandFromResource(updatePasswordResource);
         var isUpdatedPassword = userCommandService.execute(updatePasswordCommand, request);
