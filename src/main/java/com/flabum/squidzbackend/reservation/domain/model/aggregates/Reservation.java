@@ -1,5 +1,6 @@
 package com.flabum.squidzbackend.reservation.domain.model.aggregates;
 
+import com.flabum.squidzbackend.iam.domain.model.aggregates.User;
 import com.flabum.squidzbackend.reservation.domain.model.entities.BarberService;
 import com.flabum.squidzbackend.reservation.domain.model.entities.Local;
 import jakarta.persistence.*;
@@ -24,8 +25,8 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Getter
-//    private User user;
+    @ManyToOne
+    private User user;
 
     @OneToOne
     private Local local;
@@ -48,7 +49,6 @@ public class Reservation {
     private Date updateAt;
 
     public Reservation(LocalDate date, LocalTime time) {
-
         this();
         this.date = date;
         this.time = time;
