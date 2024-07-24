@@ -47,6 +47,13 @@ public class Reservation {
     @Column(nullable = false)
     private Date updateAt;
 
+    public Reservation(LocalDate date, LocalTime time) {
+
+        this();
+        this.date = date;
+        this.time = time;
+    }
+
 //    public Reservation(Local local, LocalDate date, LocalTime time, BarberService barberService) {
 //        this.local = local;
 //        this.date = date;

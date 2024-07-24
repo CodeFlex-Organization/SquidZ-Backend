@@ -5,10 +5,11 @@ import com.flabum.squidzbackend.reservation.domain.model.queries.GetAllReservati
 import com.flabum.squidzbackend.reservation.domain.model.queries.GetReservationByIdQuery;
 import com.flabum.squidzbackend.reservation.domain.services.ReservationQueryService;
 import com.flabum.squidzbackend.reservation.infrastructure.persistence.jpa.repositories.ReservationRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class ReservationQueryServiceImpl implements ReservationQueryService {
 
     private final ReservationRepository reservationRepository;
@@ -31,6 +32,6 @@ public class ReservationQueryServiceImpl implements ReservationQueryService {
      */
     @Override
     public Optional<Reservation> handle(GetReservationByIdQuery command) {
-        return reservationRepository.findById(command.id());
+        return reservationRepository.findById(command.reservationId());
     }
 }
