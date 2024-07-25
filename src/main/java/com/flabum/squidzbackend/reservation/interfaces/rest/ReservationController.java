@@ -3,6 +3,7 @@ package com.flabum.squidzbackend.reservation.interfaces.rest;
 
 import com.flabum.squidzbackend.reservation.domain.model.aggregates.Reservation;
 import com.flabum.squidzbackend.reservation.domain.model.commands.ConfirmReservationCommand;
+import com.flabum.squidzbackend.reservation.domain.model.commands.DeleteReservationCommand;
 import com.flabum.squidzbackend.reservation.domain.model.queries.GetAllReservationsQuery;
 import com.flabum.squidzbackend.reservation.domain.model.queries.GetReservationByIdQuery;
 import com.flabum.squidzbackend.reservation.domain.services.ReservationCommandService;
@@ -59,15 +60,15 @@ public class ReservationController {
 
     @PostMapping("/{reservationId}/confirmations")
     public ResponseEntity<MessageResource> confirmReservation(@PathVariable Long reservationId) {
-        var confirmReservartionCommand = new ConfirmReservationCommand(reservationId);
-        reservationCommandService.handle(confirmReservartionCommand);
+        var confirmReservationCommand = new ConfirmReservationCommand(reservationId);
+        reservationCommandService.handle(confirmReservationCommand);
         return ResponseEntity.ok(new MessageResource("Confirmed Reservation ID: " + reservationId));
     }
 
-//    @DeleteMapping("/{courseId}")
-//    public ResponseEntity<?> deleteCourse(@PathVariable Long courseId) {
-//        var deleteCourseCommand = new DeleteCourseCommand(courseId);
-//        courseCommandService.handle(deleteCourseCommand);
-//        return ResponseEntity.ok("Course with given id successfully deleted");
-//    }
+    @DeleteMapping("/{reservationId}")
+    public ResponseEntity<?> deleteReservation(@PathVariable Long reservationId) {
+        var deleteReservationCommand = new DeleteReservationCommand(reservationId);
+        reservationCommandService.handle(deleteReservationCommand);
+        return ResponseEntity.ok("Reservation with given id successfully deleted");
+    }
 }
