@@ -3,6 +3,7 @@ package com.flabum.squidzbackend.reservation.interfaces.rest;
 
 import com.flabum.squidzbackend.reservation.domain.model.aggregates.Reservation;
 import com.flabum.squidzbackend.reservation.domain.model.commands.ConfirmReservationCommand;
+import com.flabum.squidzbackend.reservation.domain.model.queries.GetAllReservationsQuery;
 import com.flabum.squidzbackend.reservation.domain.model.queries.GetReservationByIdQuery;
 import com.flabum.squidzbackend.reservation.domain.services.ReservationCommandService;
 import com.flabum.squidzbackend.reservation.domain.services.ReservationQueryService;
@@ -48,13 +49,13 @@ public class ReservationController {
         return new ResponseEntity<>(reservationResource, HttpStatus.CREATED);
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<ReservationResource>> getAllReservations() {
-//        var getAllCoursesQuery = new GetAllCoursesQuery();
-//        var courses = courseQueryService.handle(getAllCoursesQuery);
-//        var courseResources = courses.stream().map(CourseResourceFromEntityAssembler::toResourceFromEntity).toList();
-//        return ResponseEntity.ok(courseResources);
-//    }
+    @GetMapping
+    public ResponseEntity<List<ReservationResource>> getAllReservations() {
+        var getAllReservationsQuery = new GetAllReservationsQuery();
+        var reservations = reservationQueryService.handle(getAllReservationsQuery);
+        var reservationResources = reservations.stream().map(ReservationResourceFromEntityAssembler::toResourceFromEntity).toList();
+        return ResponseEntity.ok(reservationResources);
+    }
 
 //    @PostMapping("/{reservationId}/confirmations")
 //    public ResponseEntity<MessageResource> confirmReservation(@PathVariable Long reservationId) {
