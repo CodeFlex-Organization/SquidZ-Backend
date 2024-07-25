@@ -61,7 +61,15 @@ public class WebSecurityConfiguration {
         return http
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api/v1/users/sign-in", "/api/v1/users/sign-up").permitAll();
+                    auth.requestMatchers("/api/v1/users/sign-in",
+                            "/api/v1/users/sign-up",
+                            "/swagger-ui/index.html#/Users/signIn",
+                            "/swagger-ui/index.html#/Users/signUp",
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**",
+                            "/swagger-resources/**",
+                            "/swagger-ui.html",
+                            "/webjars/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(customizer -> {

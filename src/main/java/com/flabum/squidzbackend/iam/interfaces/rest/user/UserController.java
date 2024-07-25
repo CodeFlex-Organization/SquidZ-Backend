@@ -4,6 +4,7 @@ import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
 import com.flabum.squidzbackend.iam.infrastructure.token.jwts.services.TokenServiceImpl;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.*;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.*;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,8 +36,8 @@ public class UserController {
     }
 
     @GetMapping("sign-in")
-    public ResponseEntity<AuthenticateUserResource> signIn(@RequestBody SignInResource signInResource, HttpServletResponse response, HttpServletRequest request) {
-        var signInCommand = SignInCommandFromResourceAssembler.toCommandFromResource(signInResource);
+    public ResponseEntity<AuthenticateUserResource> signIn(@RequestParam String email, @RequestParam String password, HttpServletResponse response, HttpServletRequest request) {
+        var signInCommand = SignInCommandFromResourceAssembler.toCommandFromResource(new SignInResource(email, password));
         var user = userCommandService.execute(signInCommand);
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
