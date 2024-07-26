@@ -15,6 +15,7 @@ import com.flabum.squidzbackend.reservation.interfaces.rest.transform.Reservatio
 import com.flabum.squidzbackend.shared.interfaces.rest.resources.MessageResource;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,23 +24,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/reservation")
+@RequestMapping(value = "/api/v1/reservation")
 @Tag(name = "Reservations", description = "")
+@AllArgsConstructor
 public class ReservationController {
     private final ReservationCommandService reservationCommandService;
 
     private final ReservationQueryService reservationQueryService;
 
+    private final CreateReservationCommandFromResourceAssembler createReservationCommandFromResourceAssembler;
 
-    public ReservationController(ReservationCommandService reservationCommandService,
-                                 ReservationQueryService reservationQueryService) {
-        this.reservationCommandService = reservationCommandService;
-        this.reservationQueryService= reservationQueryService;
-    }
-
-    @PostMapping("/{reservationId}")
+    @PostMapping("/createReservation")
     public ResponseEntity<ReservationResource> createReservation(@RequestBody CreateReservationResource createReservationResource, HttpServletRequest request) {
-        var createReservationCommand = CreateReservationCommandFromResourceAssembler.toCommandFromResource(createReservationResource, request);
+        var createReservationCommand = createReservationCommandFromResourceAssembler.toCommandFromResource(createReservationResource, request);
         var newReservation = reservationCommandService.handle(createReservationCommand);
         if (newReservation.isEmpty()) return ResponseEntity.badRequest().build();
 

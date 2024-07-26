@@ -7,16 +7,18 @@ import com.flabum.squidzbackend.reservation.infrastructure.persistence.jpa.repos
 import com.flabum.squidzbackend.reservation.interfaces.rest.resources.CreateReservationResource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @AllArgsConstructor
 public class CreateReservationCommandFromResourceAssembler {
-    private static UserContextFacade userContextFacade;
+    private final UserContextFacade userContextFacade;
 
-    private static LocalRepository localRepository;
+    private final LocalRepository localRepository;
 
-    private static BarberServiceRepository barberServiceRepository;
+    private final BarberServiceRepository barberServiceRepository;
 
-    public static CreateReservationCommand toCommandFromResource(
+    public CreateReservationCommand toCommandFromResource(
             CreateReservationResource resource, HttpServletRequest request) {
         var user = userContextFacade.getUser(request);
         return new CreateReservationCommand(
