@@ -2,6 +2,7 @@ package com.flabum.squidzbackend.reservation.application.internal.queryservices;
 
 import com.flabum.squidzbackend.reservation.domain.model.aggregates.Reservation;
 import com.flabum.squidzbackend.reservation.domain.model.queries.GetAllReservationsQuery;
+import com.flabum.squidzbackend.reservation.domain.model.queries.GetLocalByIdQuery;
 import com.flabum.squidzbackend.reservation.domain.model.queries.GetReservationByIdQuery;
 import com.flabum.squidzbackend.reservation.domain.services.ReservationQueryService;
 import com.flabum.squidzbackend.reservation.infrastructure.persistence.jpa.repositories.ReservationRepository;

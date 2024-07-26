@@ -23,13 +23,12 @@ public class Local {
     @Getter
     private String location;
 
-    @OneToMany
+    @ManyToMany
     private List<BarberService> barberServices;
 
-//    public Local(String name, String location, List<BarberService> barberServices) {
-//        this.name = name;
-//        this.location = location;
-//        this.barberServices = barberServices;
-//
-//    }
+    public Local(String name, String location, List<BarberService> barberServices) {
+        this.name = name;
+        this.location = location;
+        this.barberServices = barberServices;
+    }
 }

@@ -14,6 +14,7 @@ import com.flabum.squidzbackend.reservation.interfaces.rest.transform.CreateRese
 import com.flabum.squidzbackend.reservation.interfaces.rest.transform.ReservationResourceFromEntityAssembler;
 import com.flabum.squidzbackend.shared.interfaces.rest.resources.MessageResource;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,16 +38,17 @@ public class ReservationController {
     }
 
     @PostMapping("/{reservationId}")
-    public ResponseEntity<ReservationResource> createReservation(@RequestBody CreateReservationResource createReservationResource) {
-        var createReservationCommand = CreateReservationCommandFromResourceAssembler.toCommandFromResource(createReservationResource);
-        var reservationId = reservationCommandService.handle(createReservationCommand);
-        if (reservationId==0L) {
-            return ResponseEntity.badRequest().build();
-        }
-        var getReservationByIdQuery = new GetReservationByIdQuery(reservationId);
+    public ResponseEntity<ReservationResource> createReservation(@RequestBody CreateReservationResource createReservationResource, HttpServletRequest request) {
+        var createReservationCommand = CreateReservationCommandFromResourceAssembler.toCommandFromResource(createReservationResource, request);
+        var newReservation = reservationCommandService.handle(createReservationCommand);
+        if (newReservation.isEmpty()) return ResponseEntity.badRequest().build();
+
+        var getReservationByIdQuery = new GetReservationByIdQuery(newReservation.get().getId());
         var reservation = reservationQueryService.handle(getReservationByIdQuery);
         if (reservation.isEmpty()) return ResponseEntity.badRequest().build();
+
         var reservationResource = ReservationResourceFromEntityAssembler.toResourceFromEntity(reservation.get());
+
         return new ResponseEntity<>(reservationResource, HttpStatus.CREATED);
     }
 

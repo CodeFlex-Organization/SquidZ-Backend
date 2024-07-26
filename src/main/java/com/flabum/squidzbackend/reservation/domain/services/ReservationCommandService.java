@@ -8,8 +8,8 @@ import com.flabum.squidzbackend.reservation.domain.model.commands.DeleteReservat
 import java.util.Optional;
 
 public interface ReservationCommandService {
-    Long handle (CreateReservationCommand command);
-    void handle(DeleteReservationCommand command);
+    Optional<Reservation> handle (CreateReservationCommand command);
+    void handle (DeleteReservationCommand command);
 
-    Long handle(ConfirmReservationCommand command);
+    void handle(ConfirmReservationCommand command);
 }

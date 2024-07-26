@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Time;
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class Reservation {
     private LocalDate date;
 
     @Getter
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime time;
 
     @ManyToOne
@@ -53,11 +55,11 @@ public class Reservation {
         this.date = date;
         this.time = time;
     }
-
-//    public Reservation(Local local, LocalDate date, LocalTime time, BarberService barberService) {
-//        this.local = local;
-//        this.date = date;
-//        this.time = time;
-//        this.barberService = barberService;
-//    }
+    public Reservation(User user, Local local, LocalDate date, LocalTime time, BarberService barberService) {
+        this.user = user;
+        this.local = local;
+        this.date = date;
+        this.time = time;
+        this.barberService = barberService;
+    }
 }

@@ -1,6 +1,5 @@
 package com.flabum.squidzbackend.reservation.application.internal.commandservices;
 
-import com.flabum.squidzbackend.reservation.application.internal.queryservices.ReservationQueryServiceImpl;
 import com.flabum.squidzbackend.reservation.domain.model.aggregates.Reservation;
 import com.flabum.squidzbackend.reservation.domain.model.commands.ConfirmReservationCommand;
 import com.flabum.squidzbackend.reservation.domain.model.commands.CreateReservationCommand;
@@ -10,6 +9,7 @@ import com.flabum.squidzbackend.reservation.infrastructure.persistence.jpa.repos
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
 @Service
 public class ReservationCommandServiceImpl implements ReservationCommandService {
 
@@ -21,11 +21,15 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
     }
 
     @Override
-    public Long handle(CreateReservationCommand command) {
-        var reservation = new Reservation(command.date(), command.time());
+    public Optional<Reservation> handle(CreateReservationCommand command) {
+        var reservation = new Reservation(
+                command.user(),
+                command.local(),
+                command.date(),
+                command.time(),
+                command.barberService());
         reservationRepository.save(reservation);
-        return reservation.getId();
-
+        return Optional.of(reservation);
     }
 
     @Override
@@ -34,7 +38,6 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
     }
 
     @Override
-    public Long handle(ConfirmReservationCommand command) {
-        return null;
+    public void handle(ConfirmReservationCommand command) {
     }
 }
