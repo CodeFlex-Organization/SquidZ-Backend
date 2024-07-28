@@ -58,6 +58,6 @@ public class SalesOrdersController {
     public ResponseEntity<?> deleteSalesOrder(@PathVariable Long id) {
         var deleteSalesOrderCommand = new DeleteSalesOrderCommand(id);
         salesOrderCommandService.handle(deleteSalesOrderCommand);
-        return ResponseEntity.ok("Sales order deleted successfully");
+        return ResponseEntity.ok("Sales order deleted successfully.");
     }
 }
