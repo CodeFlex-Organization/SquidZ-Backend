@@ -53,7 +53,9 @@ public class ReservationController {
     public ResponseEntity<List<ReservationResource>> getAllReservations() {
         var getAllReservationsQuery = new GetAllReservationsQuery();
         var reservations = reservationQueryService.handle(getAllReservationsQuery);
-        var reservationResources = reservations.stream().map(ReservationResourceFromEntityAssembler::toResourceFromEntity).toList();
+        var reservationResources = reservations.stream()
+                .map(ReservationResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
         return ResponseEntity.ok(reservationResources);
     }
 

@@ -11,5 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record CreateReservationResource(
-        Long localId, LocalDate date, @Schema(type = "string", example = "10:05") @DateTimeFormat(pattern = "HH:mm") LocalTime time, Long barberServiceId) {
+        Long localId, LocalDate date,
+        @Schema(type = "string", example = "10:05") @DateTimeFormat(pattern = "HH:mm") LocalTime time,
+        Long barberServiceId) {
 }

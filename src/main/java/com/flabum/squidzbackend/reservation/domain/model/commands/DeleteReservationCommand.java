@@ -6,5 +6,5 @@ import com.flabum.squidzbackend.reservation.domain.model.entities.Local;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record DeleteReservationCommand(Long id) {
+public record DeleteReservationCommand(Long reservationId) {
 }

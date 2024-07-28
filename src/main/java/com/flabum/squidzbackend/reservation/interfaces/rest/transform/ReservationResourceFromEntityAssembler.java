@@ -5,6 +5,13 @@ import com.flabum.squidzbackend.reservation.interfaces.rest.resources.Reservatio
 
 public class ReservationResourceFromEntityAssembler {
     public static ReservationResource toResourceFromEntity(Reservation entity){
-        return new ReservationResource(entity.getUser(), entity.getLocal(),entity.getDate(), entity.getTime(), entity.getBarberService());
+        return new ReservationResource(
+                entity.getId(),
+                entity.getUser().getId(),
+                entity.getLocal().getId(),
+                entity.getLocal().getName(),
+                entity.getDate(),
+                entity.getTime(),
+                entity.getBarberService());
     }
 }
