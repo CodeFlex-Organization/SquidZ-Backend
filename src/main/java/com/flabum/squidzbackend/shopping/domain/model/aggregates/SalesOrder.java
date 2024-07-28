@@ -3,6 +3,7 @@ package com.flabum.squidzbackend.shopping.domain.model.aggregates;
 import com.flabum.squidzbackend.shopping.domain.model.entities.Product;
 import com.flabum.squidzbackend.shopping.domain.model.entities.SalesOrderItem;
 import com.flabum.squidzbackend.shopping.domain.model.entities.ShoppingCar;
+import com.flabum.squidzbackend.shopping.domain.model.valueobjects.SalesOrderState;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,6 +23,9 @@ public class SalesOrder {
     @ManyToOne
     private ShoppingCar shoppingCar;
 
+    @Getter
+    private SalesOrderState salesOrderState;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Date createdAt;
@@ -32,9 +36,26 @@ public class SalesOrder {
 
     public SalesOrder(ShoppingCar shoppingCar) {
         this.shoppingCar = shoppingCar;
+        this.salesOrderState = SalesOrderState.PENDING;
     }
 
     public SalesOrder() {
         this.shoppingCar = new ShoppingCar(List.of(new SalesOrderItem(new Product(), 0)));
+    }
+
+    public void confirmSalesOrder() {
+        this.salesOrderState = SalesOrderState.CONFIRMED;
+    }
+
+    public void shipSalesOrder() {
+        this.salesOrderState = SalesOrderState.SHIPPED;
+    }
+
+    public void deliverSalesOrder() {
+        this.salesOrderState = SalesOrderState.DELIVERED;
+    }
+
+    public void cancelSalesOrder() {
+        this.salesOrderState = SalesOrderState.CANCELLED;
     }
 }
