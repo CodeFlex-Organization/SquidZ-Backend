@@ -59,12 +59,12 @@ public class ReservationController {
         return ResponseEntity.ok(reservationResources);
     }
 
-    @PostMapping("/{reservationId}/confirmations")
-    public ResponseEntity<MessageResource> confirmReservation(@PathVariable Long reservationId) {
-        var confirmReservationCommand = new ConfirmReservationCommand(reservationId);
-        reservationCommandService.handle(confirmReservationCommand);
-        return ResponseEntity.ok(new MessageResource("Confirmed Reservation ID: " + reservationId));
-    }
+//    @PostMapping("/{reservationId}/confirmations")
+//    public ResponseEntity<MessageResource> confirmReservation(@PathVariable Long reservationId) {
+//        var confirmReservationCommand = new ConfirmReservationCommand(reservationId);
+//        reservationCommandService.handle(confirmReservationCommand);
+//        return ResponseEntity.ok(new MessageResource("Confirmed Reservation ID: " + reservationId));
+//    }
 
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<?> deleteReservation(@PathVariable Long reservationId) {

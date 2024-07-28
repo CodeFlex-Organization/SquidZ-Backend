@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 
 import java.util.List;
 
@@ -24,6 +25,11 @@ public class Local {
     private String location;
 
     @ManyToMany
+    @JoinTable(
+            name = "local_barber_services",
+            joinColumns = @JoinColumn(name = "local_id"),
+            inverseJoinColumns = @JoinColumn(name = "barber_services_id")
+    )
     private List<BarberService> barberServices;
 
     public Local(String name, String location, List<BarberService> barberServices) {

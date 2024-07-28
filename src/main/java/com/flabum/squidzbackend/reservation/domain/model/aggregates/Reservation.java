@@ -42,6 +42,7 @@ public class Reservation {
     private LocalTime time;
 
     @ManyToOne
+    @JoinColumn(name = "barber_service_id")
     private BarberService barberService;
 
     @CreatedDate
