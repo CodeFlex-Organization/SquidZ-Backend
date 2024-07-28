@@ -63,13 +63,17 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/v1/users/sign-in",
                             "/api/v1/users/sign-up",
+                            "/api/v1/users/recover-account-email",
+                            "/api/v1/users/verify-account",
                             "/swagger-ui/index.html#/Users/signIn",
                             "/swagger-ui/index.html#/Users/signUp",
+                            "/swagger-ui/index.html#/Users/recoverAccountEmail",
                             "/swagger-ui/**",
                             "/v3/api-docs/**",
                             "/swagger-resources/**",
                             "/swagger-ui.html",
                             "/webjars/**").permitAll();
+                    auth.requestMatchers("/api/v1/users/update-password", "/api/v1/users/update-user-data", "/api/v1/roles").hasRole("USER");
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(customizer -> {
