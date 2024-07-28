@@ -2,11 +2,10 @@ package com.flabum.squidzbackend.iam.domain.services;
 
 
 import com.flabum.squidzbackend.iam.domain.model.aggregates.User;
-import com.flabum.squidzbackend.iam.domain.model.commands.SignInCommand;
-import com.flabum.squidzbackend.iam.domain.model.commands.SignUpCommand;
-import com.flabum.squidzbackend.iam.domain.model.commands.UpdatePasswordCommand;
-import com.flabum.squidzbackend.iam.domain.model.commands.UpdateUserDataCommand;
+import com.flabum.squidzbackend.iam.domain.model.commands.*;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.Optional;
@@ -20,4 +19,7 @@ public interface UserCommandService {
 
     boolean execute (UpdateUserDataCommand command, HttpServletRequest request);
 
+    String execute (SendEmailRecoverAccountCommand command) throws MessagingException;
+
+    void execute(SaveTokenInCookieCommand command, HttpServletRequest request, HttpServletResponse response);
 }

@@ -1,21 +1,25 @@
 package com.flabum.squidzbackend.iam.application.internal.commandservices;
 
 import com.flabum.squidzbackend.iam.domain.model.aggregates.User;
-import com.flabum.squidzbackend.iam.domain.model.commands.SignInCommand;
-import com.flabum.squidzbackend.iam.domain.model.commands.SignUpCommand;
-import com.flabum.squidzbackend.iam.domain.model.commands.UpdatePasswordCommand;
-import com.flabum.squidzbackend.iam.domain.model.commands.UpdateUserDataCommand;
+import com.flabum.squidzbackend.iam.domain.model.commands.*;
 import com.flabum.squidzbackend.iam.domain.model.valueobjects.EmailAddress;
 import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
 import com.flabum.squidzbackend.iam.infrastructure.hashing.bcrypt.BCryptHashingService;
+import com.flabum.squidzbackend.iam.infrastructure.mail.MailService;
 import com.flabum.squidzbackend.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.flabum.squidzbackend.iam.infrastructure.persistence.jpa.repositories.UserRepository;
 import com.flabum.squidzbackend.iam.infrastructure.token.jwts.TokenService;
 import com.flabum.squidzbackend.iam.infrastructure.token.jwts.services.TokenServiceImpl;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -28,6 +32,11 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final BCryptHashingService bcryptHashingService;
 
     private final TokenService tokenService;
+
+    private final MailService mailService;
+
+    private final TemplateEngine templateEngine;
+    private final TokenServiceImpl tokenServiceImpl;
 
     @Override
     public Optional<User> execute(SignUpCommand command) {
@@ -82,6 +91,38 @@ public class UserCommandServiceImpl implements UserCommandService {
         user.get().setPhoneNumber(command.phoneNumber());
         userRepository.save(user.get());
         return true;
+    }
+
+    @Override
+    public String execute(SendEmailRecoverAccountCommand command) throws MessagingException {
+        var email = command.email();
+        if (!userRepository.existsByEmail(email)){
+            throw new RuntimeException("User not found, the email hasn't been sent");
+        }
+
+        var token = tokenService.generateToken(email.address());
+        var verifyAccount = "http://localhost:8080/api/v1/users/verify-account?token=" + token;
+
+        Context context = new Context();
+
+        context.setVariable("verifyAccount", verifyAccount);
+
+        String htmlMessageContent = templateEngine.process("recover-email", context);
+
+        mailService.sendEmail(email.address(), "SquidZ recover account", htmlMessageContent);
+
+        return "The email has been sent";
+    }
+
+    @Override
+    public void execute(SaveTokenInCookieCommand command, HttpServletRequest request, HttpServletResponse response) {
+       if (!tokenServiceImpl.validateToken(command.token())){
+           throw new RuntimeException("token not valid");
+       }
+       var userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+       if (userAgent != null && !userAgent.contains("Android") && !userAgent.contains("iPhone") && !userAgent.contains("iPad")) {
+           TokenServiceImpl.saveJwtInCookie(response, command.token());
+       }
     }
 
 

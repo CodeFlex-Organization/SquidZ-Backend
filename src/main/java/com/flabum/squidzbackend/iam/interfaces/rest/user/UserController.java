@@ -1,11 +1,13 @@
 package com.flabum.squidzbackend.iam.interfaces.rest.user;
 
+import com.flabum.squidzbackend.iam.domain.model.commands.SaveTokenInCookieCommand;
 import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
 import com.flabum.squidzbackend.iam.infrastructure.token.jwts.services.TokenServiceImpl;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.*;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -46,7 +48,7 @@ public class UserController {
         var authenticatedUserResource = UserResourceFromEntityAssembler.toResourceFromEntityAndToken(user.get().left, user.get().right);
         var userAgent = request.getHeader(HttpHeaders.USER_AGENT);
         if (userAgent != null && !userAgent.contains("Android") && !userAgent.contains("iPhone") && !userAgent.contains("iPad")) {
-            TokenServiceImpl.saveJwtInCookie(request, response, token);
+            TokenServiceImpl.saveJwtInCookie(response, token);
         }
         return ResponseEntity.ok(authenticatedUserResource);
     }
@@ -70,4 +72,19 @@ public class UserController {
         }
         return ResponseEntity.ok("User updated successfully");
     }
+
+    @PostMapping("recover-account-email")
+    public ResponseEntity<String> recoverAccountEmail(@RequestBody SendEmailRecoverAccountResource sendEmailRecoverAccountResource) throws MessagingException {
+        var sendEmailRecoverAccountCommand = SendEmailRecoverAccountCommandFromrResourceAssembler.toCommandFromResource(sendEmailRecoverAccountResource);
+        var successMessage = userCommandService.execute(sendEmailRecoverAccountCommand);
+        return ResponseEntity.ok(successMessage);
+    }
+
+    @GetMapping("verify-account")
+    public ResponseEntity<String> verifyAccount(@RequestParam("token") String token, HttpServletResponse response, HttpServletRequest request) {
+        var saveTokenInCookieCommand =  new SaveTokenInCookieCommand(token);
+        userCommandService.execute(saveTokenInCookieCommand, request, response);
+        return ResponseEntity.ok("Token recibido: " + token);
+    }
+
 }

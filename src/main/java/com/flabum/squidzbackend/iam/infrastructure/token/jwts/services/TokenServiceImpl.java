@@ -138,7 +138,7 @@ public class TokenServiceImpl implements BearerTokenService {
         return null;
     }
 
-    public static void saveJwtInCookie(HttpServletRequest request, HttpServletResponse response, String token){
+    public static void saveJwtInCookie(HttpServletResponse response, String token){
         Cookie cookie = new Cookie("JWT", token);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
