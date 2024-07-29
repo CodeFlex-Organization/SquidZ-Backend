@@ -6,8 +6,10 @@ import com.flabum.squidzbackend.shopping.domain.services.shoppingcar.ShoppingCar
 import com.flabum.squidzbackend.shopping.domain.services.shoppingcar.ShoppingCarQueryService;
 import com.flabum.squidzbackend.shopping.interfaces.rest.resources.shoppingcar.CreateShoppingCarResource;
 import com.flabum.squidzbackend.shopping.interfaces.rest.resources.shoppingcar.ShoppingCarResource;
+import com.flabum.squidzbackend.shopping.interfaces.rest.resources.shoppingcar.UpdateShoppingCarResource;
 import com.flabum.squidzbackend.shopping.interfaces.rest.transform.shoppingcar.CreateShoppingCarCommandFromResourceAssembler;
 import com.flabum.squidzbackend.shopping.interfaces.rest.transform.shoppingcar.ShoppingCarResourceFromEntityAssembler;
+import com.flabum.squidzbackend.shopping.interfaces.rest.transform.shoppingcar.UpdateShoppingCarCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,5 +48,14 @@ public class ShoppingCarsController {
         var deleteShoppingCarCommand = new DeleteShoppingCarCommand(id);
         shoppingCarCommandService.handle(deleteShoppingCarCommand);
         return ResponseEntity.ok("Shopping car deleted successfully.");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ShoppingCarResource> updateShoppingCar(@PathVariable Long id, @RequestBody UpdateShoppingCarResource updateShoppingCarResource) {
+        var updateShoppingCarCommand = UpdateShoppingCarCommandFromResourceAssembler.toCommandFromResource(id, updateShoppingCarResource);
+        var updatedShoppingCar = shoppingCarCommandService.handle(updateShoppingCarCommand);
+        if (updatedShoppingCar.isEmpty()) { return ResponseEntity.badRequest().build(); }
+        var shoppingCarResource = ShoppingCarResourceFromEntityAssembler.toResourceFromEntity(updatedShoppingCar.get());
+        return ResponseEntity.ok(shoppingCarResource);
     }
 }

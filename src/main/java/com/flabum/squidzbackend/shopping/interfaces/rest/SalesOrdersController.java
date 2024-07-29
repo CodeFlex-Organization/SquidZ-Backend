@@ -47,8 +47,8 @@ public class SalesOrdersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SalesOrderResource> getSalesOrderById(@PathVariable Long id) {
-        var getSalesOrderById = new GetSalesOrderByIdQuery(id);
-        var salesOrder = salesOrderQueryService.handle(getSalesOrderById);
+        var getSalesOrderByIdQuery = new GetSalesOrderByIdQuery(id);
+        var salesOrder = salesOrderQueryService.handle(getSalesOrderByIdQuery);
         if (salesOrder.isEmpty()) { return ResponseEntity.notFound().build(); }
         var salesOrderResource = SalesOrderResourceFromEntityAssembler.toResourceFromEntity(salesOrder.get());
         return ResponseEntity.ok(salesOrderResource);
