@@ -12,7 +12,7 @@ public class ShoppingCar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "shoppingCar")
+    @OneToMany
     private List<SalesOrderItem> items;
 
     public ShoppingCar() {
