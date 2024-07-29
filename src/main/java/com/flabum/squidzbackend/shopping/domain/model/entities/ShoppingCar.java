@@ -23,6 +23,10 @@ public class ShoppingCar {
         this.items = items;
     }
 
+    public ShoppingCar updateShoppingCar(List<SalesOrderItem> newItems) {
+        return new ShoppingCar(newItems);
+    }
+
     Float getTotalPrices() {
         return items.stream().map(SalesOrderItem::getTotalPrice).reduce(0f, Float::sum);
     }

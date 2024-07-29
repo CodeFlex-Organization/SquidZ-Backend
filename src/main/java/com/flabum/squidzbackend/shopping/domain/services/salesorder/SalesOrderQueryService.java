@@ -1,8 +1,8 @@
-package com.flabum.squidzbackend.shopping.domain.services;
+package com.flabum.squidzbackend.shopping.domain.services.salesorder;
 
 import com.flabum.squidzbackend.shopping.domain.model.aggregates.SalesOrder;
-import com.flabum.squidzbackend.shopping.domain.model.queries.GetAllSalesOrdersQuery;
-import com.flabum.squidzbackend.shopping.domain.model.queries.GetSalesOrderByIdQuery;
+import com.flabum.squidzbackend.shopping.domain.model.queries.salesorder.GetAllSalesOrdersQuery;
+import com.flabum.squidzbackend.shopping.domain.model.queries.salesorder.GetSalesOrderByIdQuery;
 
 import java.util.List;
 import java.util.Optional;

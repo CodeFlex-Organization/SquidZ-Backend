@@ -1,14 +1,14 @@
 package com.flabum.squidzbackend.shopping.interfaces.rest;
 
-import com.flabum.squidzbackend.shopping.domain.model.commands.DeleteSalesOrderCommand;
-import com.flabum.squidzbackend.shopping.domain.model.queries.GetAllSalesOrdersQuery;
-import com.flabum.squidzbackend.shopping.domain.model.queries.GetSalesOrderByIdQuery;
-import com.flabum.squidzbackend.shopping.domain.services.SalesOrderCommandService;
-import com.flabum.squidzbackend.shopping.domain.services.SalesOrderQueryService;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.CreateSalesOrderResource;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.SalesOrderResource;
-import com.flabum.squidzbackend.shopping.interfaces.rest.transform.CreateSalesOrderCommandFromResourceAssembler;
-import com.flabum.squidzbackend.shopping.interfaces.rest.transform.SalesOrderResourceFromEntityAssembler;
+import com.flabum.squidzbackend.shopping.domain.model.commands.salesorder.DeleteSalesOrderCommand;
+import com.flabum.squidzbackend.shopping.domain.model.queries.salesorder.GetAllSalesOrdersQuery;
+import com.flabum.squidzbackend.shopping.domain.model.queries.salesorder.GetSalesOrderByIdQuery;
+import com.flabum.squidzbackend.shopping.domain.services.salesorder.SalesOrderCommandService;
+import com.flabum.squidzbackend.shopping.domain.services.salesorder.SalesOrderQueryService;
+import com.flabum.squidzbackend.shopping.interfaces.rest.resources.salesorder.CreateSalesOrderResource;
+import com.flabum.squidzbackend.shopping.interfaces.rest.resources.salesorder.SalesOrderResource;
+import com.flabum.squidzbackend.shopping.interfaces.rest.transform.salesorder.CreateSalesOrderCommandFromResourceAssembler;
+import com.flabum.squidzbackend.shopping.interfaces.rest.transform.salesorder.SalesOrderResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

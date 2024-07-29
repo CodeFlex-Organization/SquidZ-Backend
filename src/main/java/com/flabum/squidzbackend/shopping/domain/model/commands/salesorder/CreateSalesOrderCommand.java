@@ -1,4 +1,4 @@
-package com.flabum.squidzbackend.shopping.domain.model.commands;
+package com.flabum.squidzbackend.shopping.domain.model.commands.salesorder;
 
 import com.flabum.squidzbackend.shopping.domain.model.entities.ShoppingCar;
 

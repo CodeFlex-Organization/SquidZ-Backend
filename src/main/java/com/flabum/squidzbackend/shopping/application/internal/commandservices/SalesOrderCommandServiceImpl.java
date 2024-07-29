@@ -1,9 +1,8 @@
 package com.flabum.squidzbackend.shopping.application.internal.commandservices;
 
 import com.flabum.squidzbackend.shopping.domain.model.aggregates.SalesOrder;
-import com.flabum.squidzbackend.shopping.domain.model.commands.CreateSalesOrderCommand;
-import com.flabum.squidzbackend.shopping.domain.model.commands.DeleteSalesOrderCommand;
-import com.flabum.squidzbackend.shopping.domain.services.SalesOrderCommandService;
+import com.flabum.squidzbackend.shopping.domain.model.commands.salesorder.*;
+import com.flabum.squidzbackend.shopping.domain.services.salesorder.SalesOrderCommandService;
 import com.flabum.squidzbackend.shopping.infrastructure.persistence.jpa.repositories.SalesOrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +33,45 @@ public class SalesOrderCommandServiceImpl implements SalesOrderCommandService {
         } catch (Exception e){
             throw new IllegalArgumentException("Error while deleting sales order: " + e.getMessage() + ".");
         }
+    }
+
+    @Override
+    public Long handle(ConfirmSalesOrderCommand command) {
+        salesOrderRepository.findById(command.id()).map(so -> {
+            so.confirmSalesOrder();
+            salesOrderRepository.save(so);
+            return command.id();
+        }).orElseThrow(() -> new RuntimeException("Sales order not found"));
+        return null;
+    }
+
+    @Override
+    public Long handle(ShipSalesOrderCommand command) {
+        salesOrderRepository.findById(command.id()).map(so -> {
+            so.shipSalesOrder();
+            salesOrderRepository.save(so);
+            return command.id();
+        }).orElseThrow(() -> new RuntimeException("Sales order not found"));
+        return null;
+    }
+
+    @Override
+    public Long handle(DeliverSalesOrderCommand command) {
+        salesOrderRepository.findById(command.id()).map(so -> {
+            so.deliverSalesOrder();
+            salesOrderRepository.save(so);
+            return command.id();
+        }).orElseThrow(() -> new RuntimeException("Sales order not found"));
+        return null;
+    }
+
+    @Override
+    public Long handle(CancelSalesOrderCommand command) {
+        salesOrderRepository.findById(command.id()).map(so -> {
+            so.cancelSalesOrder();
+            salesOrderRepository.save(so);
+            return command.id();
+        }).orElseThrow(() -> new RuntimeException("Sales order not found"));
+        return null;
     }
 }

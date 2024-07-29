@@ -1,11 +1,9 @@
 package com.flabum.squidzbackend.shopping.interfaces.rest;
 
-import com.flabum.squidzbackend.shopping.domain.model.queries.GetAllProductsQuery;
-import com.flabum.squidzbackend.shopping.domain.services.ProductQueryService;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.ProductResource;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.SalesOrderResource;
-import com.flabum.squidzbackend.shopping.interfaces.rest.transform.ProductResourceFromEntityAssembler;
-import com.flabum.squidzbackend.shopping.interfaces.rest.transform.SalesOrderResourceFromEntityAssembler;
+import com.flabum.squidzbackend.shopping.domain.model.queries.product.GetAllProductsQuery;
+import com.flabum.squidzbackend.shopping.domain.services.product.ProductQueryService;
+import com.flabum.squidzbackend.shopping.interfaces.rest.resources.product.ProductResource;
+import com.flabum.squidzbackend.shopping.interfaces.rest.transform.product.ProductResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
