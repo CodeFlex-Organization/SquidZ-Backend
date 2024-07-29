@@ -2,20 +2,19 @@ package com.flabum.squidzbackend.shopping.domain.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 public class SalesOrderItem {
     @Id
-    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @Getter
     private Product product;
 
-    @Getter
     private Integer quantity;
 
     public SalesOrderItem() {
