@@ -1,26 +1,16 @@
 package com.flabum.squidzbackend.shopping.interfaces.rest;
 
 import com.flabum.squidzbackend.shopping.domain.model.commands.product.DeleteProductCommand;
-import com.flabum.squidzbackend.shopping.domain.model.commands.salesorder.DeleteSalesOrderCommand;
 import com.flabum.squidzbackend.shopping.domain.model.queries.product.GetAllProductsQuery;
 import com.flabum.squidzbackend.shopping.domain.model.queries.product.GetProductByIdQuery;
-import com.flabum.squidzbackend.shopping.domain.model.queries.salesorder.GetSalesOrderByIdQuery;
 import com.flabum.squidzbackend.shopping.domain.services.product.ProductCommandService;
 import com.flabum.squidzbackend.shopping.domain.services.product.ProductQueryService;
 import com.flabum.squidzbackend.shopping.interfaces.rest.resources.product.CreateProductResource;
 import com.flabum.squidzbackend.shopping.interfaces.rest.resources.product.ProductResource;
 import com.flabum.squidzbackend.shopping.interfaces.rest.resources.product.UpdateProductResource;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.salesorder.CreateSalesOrderResource;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.salesorder.SalesOrderResource;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.shoppingcar.ShoppingCarResource;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.shoppingcar.UpdateShoppingCarResource;
 import com.flabum.squidzbackend.shopping.interfaces.rest.transform.product.CreateProductCommandFromResourceAssembler;
 import com.flabum.squidzbackend.shopping.interfaces.rest.transform.product.ProductResourceFromEntityAssembler;
 import com.flabum.squidzbackend.shopping.interfaces.rest.transform.product.UpdateProductCommandFromResourceAssembler;
-import com.flabum.squidzbackend.shopping.interfaces.rest.transform.salesorder.CreateSalesOrderCommandFromResourceAssembler;
-import com.flabum.squidzbackend.shopping.interfaces.rest.transform.salesorder.SalesOrderResourceFromEntityAssembler;
-import com.flabum.squidzbackend.shopping.interfaces.rest.transform.shoppingcar.ShoppingCarResourceFromEntityAssembler;
-import com.flabum.squidzbackend.shopping.interfaces.rest.transform.shoppingcar.UpdateShoppingCarCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
