@@ -1,7 +1,7 @@
-package com.flabum.squidzbackend.shopping.interfaces.rest.transform;
+package com.flabum.squidzbackend.shopping.interfaces.rest.transform.product;
 
 import com.flabum.squidzbackend.shopping.domain.model.entities.Product;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.ProductResource;
+import com.flabum.squidzbackend.shopping.interfaces.rest.resources.product.ProductResource;
 
 public class ProductResourceFromEntityAssembler {
     public static ProductResource toResourceFromEntity(Product entity) {

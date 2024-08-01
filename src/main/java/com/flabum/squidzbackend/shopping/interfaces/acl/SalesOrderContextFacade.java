@@ -1,10 +1,10 @@
 package com.flabum.squidzbackend.shopping.interfaces.acl;
 
-import com.flabum.squidzbackend.shopping.domain.model.commands.CreateSalesOrderCommand;
+import com.flabum.squidzbackend.shopping.domain.model.commands.salesorder.CreateSalesOrderCommand;
 import com.flabum.squidzbackend.shopping.domain.model.entities.ShoppingCar;
-import com.flabum.squidzbackend.shopping.domain.model.queries.GetSalesOrderByIdQuery;
-import com.flabum.squidzbackend.shopping.domain.services.SalesOrderCommandService;
-import com.flabum.squidzbackend.shopping.domain.services.SalesOrderQueryService;
+import com.flabum.squidzbackend.shopping.domain.model.queries.salesorder.GetSalesOrderByIdQuery;
+import com.flabum.squidzbackend.shopping.domain.services.salesorder.SalesOrderCommandService;
+import com.flabum.squidzbackend.shopping.domain.services.salesorder.SalesOrderQueryService;
 
 public class SalesOrderContextFacade {
     private final SalesOrderCommandService salesOrderCommandService;

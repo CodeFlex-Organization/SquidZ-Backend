@@ -1,14 +1,15 @@
 package com.flabum.squidzbackend.shopping.interfaces.rest;
 
-import com.flabum.squidzbackend.shopping.domain.model.commands.DeleteSalesOrderCommand;
-import com.flabum.squidzbackend.shopping.domain.model.queries.GetAllSalesOrdersQuery;
-import com.flabum.squidzbackend.shopping.domain.model.queries.GetSalesOrderByIdQuery;
-import com.flabum.squidzbackend.shopping.domain.services.SalesOrderCommandService;
-import com.flabum.squidzbackend.shopping.domain.services.SalesOrderQueryService;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.CreateSalesOrderResource;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.SalesOrderResource;
-import com.flabum.squidzbackend.shopping.interfaces.rest.transform.CreateSalesOrderCommandFromResourceAssembler;
-import com.flabum.squidzbackend.shopping.interfaces.rest.transform.SalesOrderResourceFromEntityAssembler;
+import com.flabum.squidzbackend.shopping.domain.model.commands.salesorder.*;
+import com.flabum.squidzbackend.shopping.domain.model.queries.salesorder.GetAllSalesOrdersQuery;
+import com.flabum.squidzbackend.shopping.domain.model.queries.salesorder.GetSalesOrderByIdQuery;
+import com.flabum.squidzbackend.shopping.domain.services.salesorder.SalesOrderCommandService;
+import com.flabum.squidzbackend.shopping.domain.services.salesorder.SalesOrderQueryService;
+import com.flabum.squidzbackend.shopping.interfaces.rest.resources.MessageResource;
+import com.flabum.squidzbackend.shopping.interfaces.rest.resources.salesorder.CreateSalesOrderResource;
+import com.flabum.squidzbackend.shopping.interfaces.rest.resources.salesorder.SalesOrderResource;
+import com.flabum.squidzbackend.shopping.interfaces.rest.transform.salesorder.CreateSalesOrderCommandFromResourceAssembler;
+import com.flabum.squidzbackend.shopping.interfaces.rest.transform.salesorder.SalesOrderResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,8 +48,8 @@ public class SalesOrdersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SalesOrderResource> getSalesOrderById(@PathVariable Long id) {
-        var getSalesOrderById = new GetSalesOrderByIdQuery(id);
-        var salesOrder = salesOrderQueryService.handle(getSalesOrderById);
+        var getSalesOrderByIdQuery = new GetSalesOrderByIdQuery(id);
+        var salesOrder = salesOrderQueryService.handle(getSalesOrderByIdQuery);
         if (salesOrder.isEmpty()) { return ResponseEntity.notFound().build(); }
         var salesOrderResource = SalesOrderResourceFromEntityAssembler.toResourceFromEntity(salesOrder.get());
         return ResponseEntity.ok(salesOrderResource);
@@ -59,5 +60,33 @@ public class SalesOrdersController {
         var deleteSalesOrderCommand = new DeleteSalesOrderCommand(id);
         salesOrderCommandService.handle(deleteSalesOrderCommand);
         return ResponseEntity.ok("Sales order deleted successfully.");
+    }
+
+    @PostMapping("/{id}/confirmed")
+    public ResponseEntity<MessageResource> confirmSalesOrder(@PathVariable Long id) {
+        var confirmSalesOrderCommand = new ConfirmSalesOrderCommand(id);
+        salesOrderCommandService.handle(confirmSalesOrderCommand);
+        return ResponseEntity.ok(new MessageResource("Confirmed sales order with id: " + id + "."));
+    }
+
+    @PostMapping("/{id}/shipped")
+    public ResponseEntity<MessageResource> shipSalesOrder(@PathVariable Long id) {
+        var shipSalesOrderCommand = new ShipSalesOrderCommand(id);
+        salesOrderCommandService.handle(shipSalesOrderCommand);
+        return ResponseEntity.ok(new MessageResource("Shipped sales order with id: " + id + "."));
+    }
+
+    @PostMapping("/{id}/delivered")
+    public ResponseEntity<MessageResource> deliverSalesOrder(@PathVariable Long id) {
+        var deliverSalesOrderCommand = new DeliverSalesOrderCommand(id);
+        salesOrderCommandService.handle(deliverSalesOrderCommand);
+        return ResponseEntity.ok(new MessageResource("Delivered sales order with id: " + id + "."));
+    }
+
+    @PostMapping("/{id}/cancelled")
+    public ResponseEntity<MessageResource> cancelSalesOrder(@PathVariable Long id) {
+        var cancelSalesOrderCommand = new CancelSalesOrderCommand(id);
+        salesOrderCommandService.handle(cancelSalesOrderCommand);
+        return ResponseEntity.ok(new MessageResource("Cancelled sales order with id: " + id + "."));
     }
 }

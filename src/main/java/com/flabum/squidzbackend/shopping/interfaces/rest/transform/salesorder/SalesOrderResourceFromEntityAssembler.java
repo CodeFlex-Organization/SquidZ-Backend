@@ -1,7 +1,7 @@
-package com.flabum.squidzbackend.shopping.interfaces.rest.transform;
+package com.flabum.squidzbackend.shopping.interfaces.rest.transform.salesorder;
 
 import com.flabum.squidzbackend.shopping.domain.model.aggregates.SalesOrder;
-import com.flabum.squidzbackend.shopping.interfaces.rest.resources.SalesOrderResource;
+import com.flabum.squidzbackend.shopping.interfaces.rest.resources.salesorder.SalesOrderResource;
 
 public class SalesOrderResourceFromEntityAssembler {
         public static SalesOrderResource toResourceFromEntity(SalesOrder entity) {
