@@ -101,7 +101,7 @@ public class UserCommandServiceImpl implements UserCommandService {
         }
 
         var token = tokenService.generateToken(email.address());
-        var verifyAccount = "http://localhost:8080/api/v1/users/verify-account?token=" + token;
+        var verifyAccount = "http://localhost:9090/api/v1/users/verify-account?token=" + token;
 
         Context context = new Context();
 
