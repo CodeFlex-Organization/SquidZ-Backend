@@ -37,6 +37,7 @@ public class UserController {
         return new ResponseEntity<>(userResource, HttpStatus.CREATED);
     }
 
+
     @GetMapping("sign-in")
     public ResponseEntity<AuthenticateUserResource> signIn(@RequestParam String email, @RequestParam String password, HttpServletResponse response, HttpServletRequest request) {
         var signInCommand = SignInCommandFromResourceAssembler.toCommandFromResource(new SignInResource(email, password));
