@@ -1,7 +1,9 @@
 package com.flabum.squidzbackend.iam.interfaces.rest.user;
 
 import com.flabum.squidzbackend.iam.domain.model.commands.SaveTokenInCookieCommand;
+import com.flabum.squidzbackend.iam.domain.model.queries.GetUserByJwtQuery;
 import com.flabum.squidzbackend.iam.domain.services.UserCommandService;
+import com.flabum.squidzbackend.iam.domain.services.UserQueryService;
 import com.flabum.squidzbackend.iam.infrastructure.token.jwts.services.TokenServiceImpl;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.resources.*;
 import com.flabum.squidzbackend.iam.interfaces.rest.user.transform.*;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserCommandService userCommandService;
+    private final UserQueryService userQueryService;
 
     @PostMapping("sign-up")
     public ResponseEntity<UserResource> signUp(@RequestBody SignUpResource signUpResource) {
@@ -87,4 +90,14 @@ public class UserController {
         return ResponseEntity.ok("Token recibido: " + token);
     }
 
+    @GetMapping("get-user")
+    public ResponseEntity<UserResource> getUser(HttpServletRequest request) {
+        var getUserByJwtQuery = new GetUserByJwtQuery();
+        var user = userQueryService.execute(getUserByJwtQuery, request);
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var userResource = UserResourceFromEntityAssembler.toResourceFromEntity(user.get());
+        return ResponseEntity.ok(userResource);
+    }
 }
