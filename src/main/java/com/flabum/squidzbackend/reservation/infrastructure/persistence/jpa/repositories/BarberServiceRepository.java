@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface BarberServiceRepository extends JpaRepository<BarberService, Long> {
     Optional<BarberService> findById(Long barberServiceId);
+
 }
