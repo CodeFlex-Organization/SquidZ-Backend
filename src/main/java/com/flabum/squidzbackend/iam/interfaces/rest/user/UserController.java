@@ -100,4 +100,12 @@ public class UserController {
         var userResource = UserResourceFromEntityAssembler.toResourceFromEntity(user.get());
         return ResponseEntity.ok(userResource);
     }
+
+    @PostMapping("update-password-recover-account")
+    public ResponseEntity<String> updatePasswordRecoverAccount(@RequestBody UpdatePasswordRecoverAccountResource updatePasswordRecoverAccountResource, HttpServletRequest request) {
+        var updatePasswordRecoverAccountCommand = UpdatePasswordRecoverAccountCommandFromResourceAssembler.toCommandFromResource(updatePasswordRecoverAccountResource);
+        userCommandService.execute(updatePasswordRecoverAccountCommand, request);
+        return ResponseEntity.ok("Password recover account updated successfully");
+    }
+
 }

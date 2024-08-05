@@ -22,4 +22,7 @@ public interface UserCommandService {
     String execute (SendEmailRecoverAccountCommand command) throws MessagingException;
 
     void execute(SaveTokenInCookieCommand command, HttpServletRequest request, HttpServletResponse response);
+
+    String execute (UpdatePasswordRecoverAccountCommand command, HttpServletRequest request);
+
 }
