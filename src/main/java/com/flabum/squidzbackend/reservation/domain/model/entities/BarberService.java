@@ -27,9 +27,10 @@ public class BarberService {
     @Getter
     private String duration;
 
-//    public BarberService(String name, Float price, String duration) {
-//        this.name = name;
-//        this.price = price;
-//        this.duration = duration;
-//    }
+    public BarberService(String name, Float price, String duration) {
+        this();
+        this.name = name;
+        this.price = price;
+        this.duration = duration;
+    }
 }

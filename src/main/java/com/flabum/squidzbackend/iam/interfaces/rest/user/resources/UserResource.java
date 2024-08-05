@@ -6,5 +6,5 @@ import com.flabum.squidzbackend.iam.domain.model.valueobjects.PhoneNumber;
 
 import java.util.List;
 
-public record UserResource (Long id, Name name, PhoneNumber phoneNumber, EmailAddress emailAddress, String password, List<String> roles){}
+public record UserResource (Long id, Name name, PhoneNumber phoneNumber, EmailAddress emailAddress, List<String> roles){}
 

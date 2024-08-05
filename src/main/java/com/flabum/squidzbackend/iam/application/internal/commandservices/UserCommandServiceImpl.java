@@ -125,5 +125,17 @@ public class UserCommandServiceImpl implements UserCommandService {
        }
     }
 
+    @Override
+    public String execute(UpdatePasswordRecoverAccountCommand command, HttpServletRequest request) {
+        var jwt = TokenServiceImpl.getJwtFromCookie(request);
+        var user = userRepository.findByEmail(new EmailAddress(tokenService.getUsernameFromToken(jwt))).orElseThrow(() -> new RuntimeException("User not found"));
+        if ( !(command.newPassword().equals(command.repeatPassword())) ){
+            throw new RuntimeException("Passwords do not match");
+        }
+        user.setPassword(bcryptHashingService.encode(command.newPassword()));
+        userRepository.save(user);
+        return "Password updated successfully";
+    }
+
 
 }
