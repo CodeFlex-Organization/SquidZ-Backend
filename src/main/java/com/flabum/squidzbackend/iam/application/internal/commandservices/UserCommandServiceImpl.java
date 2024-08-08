@@ -38,6 +38,8 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final TemplateEngine templateEngine;
     private final TokenServiceImpl tokenServiceImpl;
 
+
+
     @Override
     public Optional<User> execute(SignUpCommand command) {
         if (userRepository.existsByEmail(command.emailAddress())) {

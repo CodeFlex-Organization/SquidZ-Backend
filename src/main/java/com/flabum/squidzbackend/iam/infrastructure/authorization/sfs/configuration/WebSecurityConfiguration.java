@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -83,6 +84,10 @@ public class WebSecurityConfiguration {
                 })
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class)
+                .headers(customizer -> {
+                    customizer.contentSecurityPolicy("default-src 'self'; script-src 'self' https://apis.google.com");
+                    customizer.addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy", "default-src 'self'; script-src 'self' https://apis.google.com"));
+                })
                 .build();
     }
 
