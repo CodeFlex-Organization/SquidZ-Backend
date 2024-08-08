@@ -84,10 +84,6 @@ public class WebSecurityConfiguration {
                 })
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class)
-                .headers(customizer -> {
-                    customizer.contentSecurityPolicy("default-src 'self'; script-src 'self' https://apis.google.com");
-                    customizer.addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy", "default-src 'self'; script-src 'self' https://apis.google.com"));
-                })
                 .build();
     }
 
