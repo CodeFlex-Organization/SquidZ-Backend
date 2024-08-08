@@ -50,7 +50,9 @@ public class UserController {
         var token = user.get().right;
         var authenticatedUserResource = UserResourceFromEntityAssembler.toResourceFromEntityAndToken(user.get().left, user.get().right);
         var userAgent = request.getHeader(HttpHeaders.USER_AGENT);
-        TokenServiceImpl.saveJwtInCookie(response, token);
+        if (userAgent != null && !userAgent.contains("Android") && !userAgent.contains("iPhone") && !userAgent.contains("iPad")) {
+            TokenServiceImpl.saveJwtInCookie(response, token);
+        }
         return ResponseEntity.ok(authenticatedUserResource);
     }
 
