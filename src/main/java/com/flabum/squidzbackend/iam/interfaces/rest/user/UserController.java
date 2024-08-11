@@ -106,4 +106,20 @@ public class UserController {
         return ResponseEntity.ok("Password recover account updated successfully");
     }
 
+    @PostMapping("sign-out")
+    public ResponseEntity<String> signOut(HttpServletRequest request, HttpServletResponse response) {
+
+        Cookie cookie = new Cookie("JWT", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+        request.getSession().invalidate();
+
+        return ResponseEntity.ok("Successfully signed out");
+    }
+
+
 }
