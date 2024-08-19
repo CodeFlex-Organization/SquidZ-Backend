@@ -49,8 +49,8 @@ public class UserController {
         }
         var token = user.get().right;
         var authenticatedUserResource = UserResourceFromEntityAssembler.toResourceFromEntityAndToken(user.get().left, user.get().right);
-        var userAgent = request.getHeader(HttpHeaders.USER_AGENT);
-        TokenServiceImpl.saveJwtInCookie(response, token);
+//        var userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+//        TokenServiceImpl.saveJwtInCookie(response, token);
         return ResponseEntity.ok(authenticatedUserResource);
     }
 

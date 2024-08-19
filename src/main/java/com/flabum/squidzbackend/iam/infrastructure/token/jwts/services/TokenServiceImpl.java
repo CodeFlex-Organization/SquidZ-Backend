@@ -140,8 +140,8 @@ public class TokenServiceImpl implements BearerTokenService {
 
     public static void saveJwtInCookie(HttpServletResponse response, String token){
         Cookie cookie = new Cookie("JWT", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setHttpOnly(true);//cambiar a true en producción
+        cookie.setSecure(true);//cambiar a true en producción
         cookie.setPath("/");
         cookie.setMaxAge(7 * 24 * 60 * 60); // 7 días
         response.addCookie(cookie);
